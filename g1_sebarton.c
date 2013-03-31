@@ -33,8 +33,7 @@ int main(void)
 		if ( irDetected() ) {
 			playBuzzer(10000);
 		}
-		
-	
+			
 		// Check if the button has been pressed, if so, nighty-night gadget!
 		if(sleep_status == ON )
 		{
@@ -61,7 +60,6 @@ int main(void)
 			Goodnight stars
 			Goodnight air
 			Goodnight noises everywhere */
-			
 			goToSleep(); 
 		}
 

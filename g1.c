@@ -105,21 +105,21 @@ int buttonPressed()
 /* Pin change interrupt. Set the sleep_status to enable sleep if button pressed */
 ISR(PCINT0_vect)
 {
-	sleep_status = ON;	
+	sleep_status = ON;
 }
 
 /* place gadget in sleep mode, adctivated with button */
 void goToSleep(void)
 {
-	// Delay for button debouncing - we're giving this to you
-	_delay_ms(1000);
+
+	// Delay for button debouncing
+	_delay_ms(100);
 
 	// Set the sleep mode (could be done in the initSystem as well - only needs to be done once)
 	set_sleep_mode(SLEEP_MODE_PWR_DOWN);
 
-	// Set LED outputs to inputs
-	DDRB &= ~_BV(PB1);
-	DDRA &= ~_BV(PA7) & ~_BV(PA3);
+	// Set outputs to inputs to reduce power consumption
+	DDRA &= ~_BV(LED); // LED
 
 	// Allow stuff to trigger sleep mode but don't go to sleep yet
 	sleep_enable();
@@ -132,13 +132,13 @@ void goToSleep(void)
 		
 	// When we get here we've just woken up again, so disable the ability to sleep - brown-out detect automatically comes back
     sleep_disable();
-	
-	// Set LED pins back to ouputs
-	DDRB |= _BV(PB1);
-	DDRA |= _BV(PA7) | _BV(PA3);
-	
-	// Delay for a second so that you don't accidentally go to sleep
-	_delay_ms(1000);
+
+	// Delay for a bit so that you don't accidentally go to sleep
+	_delay_ms(100);
+
+	// Set LED pins back on
+	initLED();
+
 	// Make it so the button can send us back to sleep (set sleep_status to 0)
 	sleep_status = OFF;
 
