@@ -6,6 +6,7 @@
 	- test IR
 	- test buzzer
 	X button inverted
+	- add README
 
 
  */
