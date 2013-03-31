@@ -21,10 +21,11 @@
 uint8_t sleep_status;
 
 void initLED(void);
-void setLED(uint8_t);
+void initBuzzer(void);
 void initButton(void);
-void goToSleep(void);
-
 void initSystem(void);
+
+void setLED(uint8_t);
+int buttonPressed(void);
 
 #endif

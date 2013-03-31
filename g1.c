@@ -20,7 +20,7 @@ void initLED()
 	
 }
 
-/*  In this function you should set the button pin to be an input and enable the button pin-change interrupt interrupt */
+/*  In this function you should set the button pin to be an input */
 void initButton()
 {
 	// Set button as input
@@ -28,9 +28,18 @@ void initButton()
 	
 }
 
+/*  Set buzzer as output */
+void initBuzzer()
+{
+
+	DDRA |= _BV(BUZZER);
+	
+}
+
 // You do not need to modify this function
 void initSystem()
 {
+	initBuzzer()
 	initLED();  // Turn on our LED
 	initButton(); // Turn on button interrupts
 	sei();        // Nothing's gonna interrupt until we turn on global interrupts
