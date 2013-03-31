@@ -18,8 +18,6 @@
 #define ON 1
 #define OFF 0
 
-uint8_t sleep_status;
-
 void initLED(void);
 void initBuzzer(void);
 void initButton(void);
@@ -27,5 +25,6 @@ void initSystem(void);
 
 void setLED(uint8_t);
 int buttonPressed(void);
+void playBuzzer(uint8_t);
 
 #endif

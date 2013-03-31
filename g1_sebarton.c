@@ -25,6 +25,7 @@ int main(void)
 			setLED(ON);
 			_delay_ms(100);
 			setLED(OFF);
+			playBuzzer(100);
 			_delay_ms(100);
 		}
 		

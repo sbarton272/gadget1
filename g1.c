@@ -39,7 +39,7 @@ void initBuzzer()
 // You do not need to modify this function
 void initSystem()
 {
-	initBuzzer()
+	initBuzzer();
 	initLED();  // Turn on our LED
 	initButton(); // Turn on button interrupts
 	sei();        // Nothing's gonna interrupt until we turn on global interrupts
@@ -70,3 +70,25 @@ int buttonPressed()
 {
 	return !!(PINA & _BV(BUTTON));
 }
+
+/* ==========================
+ * ===== Buzzer Controls ====
+ * ========================== */
+
+ /* Play buzzer for 1/2 duty cycle for specified time */
+void playBuzzer(uint8_t time)
+{
+	uint8_t t;
+
+	for (t = 0; t < time; t++)
+	{
+		/* on for even times, off for odd times */
+		if( (t % 3) == 0 ) {
+			PORTA |= _BV(BUZZER);
+		}
+		else {
+			PORTA &= ~_BV(BUZZER);
+		}
+	}
+}
+
