@@ -2,6 +2,7 @@
 
 volatile uint8_t led = OFF;
 
+
 /* ==========================
  * ===== Init Functions =====
  * ========================== */
@@ -15,8 +16,8 @@ void initLED()
 	// Set LED pin direction to output
 	DDRA |= _BV(LED);
 	
-	// Start pins off active high (which corresponds to LED off)
-	setLED(OFF);
+	// Start LEDs ON to signal device is on
+	setLED(ON);
 	
 }
 
@@ -25,7 +26,11 @@ void initButton()
 {
 	// Set button as input
 	DDRA &= ~_BV(BUTTON);
-	
+	// Enable pin change 0 interrupt
+	GIMSK  |= _BV(PCIE0);
+	// enable PCINT1 in the pin change mask, the button
+	PCMSK0 |= _BV(BUTTON_PC);
+
 }
 
 /*  Set buzzer as output */
@@ -62,6 +67,7 @@ void initADC()
 // You do not need to modify this function
 void initSystem()
 {
+	sleep_status = OFF;
 	initBuzzer();
 	initLED();  // Turn on our LED
 	initButton(); // Turn on button interrupts
@@ -86,6 +92,7 @@ void setLED(uint8_t led)
 
 /* ==========================
  * ===== Button Controls ====
+ * ===== And Sleep Mode =====
  * ========================== */
 
 /*  In this function, return a non-zero value if the button was pressed, and 0
@@ -93,6 +100,48 @@ void setLED(uint8_t led)
 int buttonPressed()
 {
 	return !!(PINA & _BV(BUTTON));
+}
+
+/* Pin change interrupt. Set the sleep_status to enable sleep if button pressed */
+ISR(PCINT0_vect)
+{
+	sleep_status = ON;	
+}
+
+/* place gadget in sleep mode, adctivated with button */
+void goToSleep(void)
+{
+	// Delay for button debouncing - we're giving this to you
+	_delay_ms(1000);
+
+	// Set the sleep mode (could be done in the initSystem as well - only needs to be done once)
+	set_sleep_mode(SLEEP_MODE_PWR_DOWN);
+
+	// Set LED outputs to inputs
+	DDRB &= ~_BV(PB1);
+	DDRA &= ~_BV(PA7) & ~_BV(PA3);
+
+	// Allow stuff to trigger sleep mode but don't go to sleep yet
+	sleep_enable();
+
+	// Turn off brown-out detect
+	sleep_bod_disable();
+
+	// Send the sleep instruction
+    sleep_cpu();
+		
+	// When we get here we've just woken up again, so disable the ability to sleep - brown-out detect automatically comes back
+    sleep_disable();
+	
+	// Set LED pins back to ouputs
+	DDRB |= _BV(PB1);
+	DDRA |= _BV(PA7) | _BV(PA3);
+	
+	// Delay for a second so that you don't accidentally go to sleep
+	_delay_ms(1000);
+	// Make it so the button can send us back to sleep (set sleep_status to 0)
+	sleep_status = OFF;
+
 }
 
 /* ==========================

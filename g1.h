@@ -12,6 +12,7 @@
 // Some convenient definitions
 #define LED PA5
 #define BUTTON PA1
+#define BUTTON_PC PCINT1
 #define BUZZER PA7
 #define SHARPIR PA0
 
@@ -21,6 +22,8 @@
 #define ON 1
 #define OFF 0
 
+uint8_t sleep_status;
+
 void initLED(void);
 void initBuzzer(void);
 void initButton(void);
@@ -29,8 +32,9 @@ void initSystem(void);
 
 void setLED(uint8_t);
 int buttonPressed(void);
+void goToSleep(void);
 void playBuzzer(uint8_t);
 int irDetected(void);
-uint8_t readChannel(uint8_t);
+uint8_t readIR(void);
 
 #endif
