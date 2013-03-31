@@ -15,16 +15,22 @@
 #define BUZZER PA7
 #define SHARPIR PA0
 
+// SHARP IR values
+#define LONG_RANGE 10;
+
 #define ON 1
 #define OFF 0
 
 void initLED(void);
 void initBuzzer(void);
 void initButton(void);
+void initADC(void);
 void initSystem(void);
 
 void setLED(uint8_t);
 int buttonPressed(void);
 void playBuzzer(uint8_t);
+int irDetected(void);
+uint8_t readChannel(uint8_t);
 
 #endif
