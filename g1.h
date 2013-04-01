@@ -21,7 +21,7 @@
 #define MAX_SAMPLES 10
 #define SHIFT 3
 #define BUZZ_TIME 1000
-#define DUTY_CYCLE 150
+#define DUTY_CYCLE 200
 
 #define ON 1
 #define OFF 0
