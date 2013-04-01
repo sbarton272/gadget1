@@ -26,20 +26,25 @@
 
 int main(void)
 {	
-	uint8_t ir_avrg, samples;
+	uint8_t ir_avrg, samples, read;
 	initSystem();
 
 	while(1) {	
-		setLED(OFF);
+		//setLED(OFF);
 
-		for (samples = 0; samples < MAX_SAMPLES; samples++ ){
-			ir_avrg = readIR() / MAX_SAMPLES;
+		samples = 0;
+		while ( (samples < MAX_SAMPLES) && !sleep_status) {
+			if ( read = readIR() ) {
+				// move bits over to help with reading small values
+				ir_avrg = ((read << SHIFT) / MAX_SAMPLES) >> SHIFT;
+				samples++;
+			}
 		}
 
 		if ( ir_avrg > LONG_RANGE ) {
-			setLED(ON);
-			_delay_ms(100);
-			//playBuzzer(10000);
+			setBuzzer(ON);
+			_delay_ms(BUZZ_TIME);
+			setBuzzer(OFF);
 		}
 
 		// Check if the button has been pressed, if so, nighty-night gadget!

@@ -1,6 +1,7 @@
 #include "g1.h"
 
 volatile uint8_t led = OFF;
+uint8_t buzzer;
 
 
 /* ==========================
@@ -39,6 +40,13 @@ void initBuzzer()
 
 	DDRA |= _BV(BUZZER);
 	
+	// Initialize timer 0 with a prescalar of 256, then turn on the output compare A and timer overflow interrupts
+	TCCR0B |= _BV(CS02); // 256 prescale
+	TIMSK0 |= _BV(OCIE0A) | _BV(TOIE0); // compare A, overflow
+
+	// duty cycle number
+	OCR0A = DUTY_CYCLE;
+
 }
 
 /*  Set sharp ir as input */
@@ -52,7 +60,7 @@ void initSharpIR()
 void initADC()
 {
 
-	ADCSRA = _BV(ADEN);			// enable ADC
+	ADCSRA = _BV(ADEN);	// enable ADC
 
 	// In this function you should set up and enable the ADC with the following characteristics:
 	// Left adjust the result so that you can return 8-bit results easily
@@ -60,7 +68,8 @@ void initADC()
 	ADCSRB |= _BV(ADLAR);				// turns on 8-bit mode
 	ADCSRB |= _BV(ADPS2) | _BV(ADPS1); 	// divide clock by 64 (ADPS2:0 set to 'b110)
 
-	ADMUX = 0; // set so vcc is the reference
+	ADMUX = 0; // set read pin 0
+	ADMUX |= _BV(REFS1); // set 1.1V as reference
 
 }
 
@@ -148,25 +157,38 @@ void goToSleep(void)
  * ===== Buzzer Controls ====
  * ========================== */
 
- /* Play buzzer for 1/2 duty cycle for specified time */
-void playBuzzer(uint8_t time)
+void setBuzzer(uint8_t on)
 {
-	uint8_t t;
-
-	for (t = 0; t < time; t++)
-	{
-		/* on for even times, off for odd times */
-		if( (t % 3) == 0 ) {
-			PORTA |= _BV(BUZZER);
-		}
-		else {
-			PORTA &= ~_BV(BUZZER);
-		}
-	}
-	
-	// end with buzzer off
-	PORTA &= ~_BV(BUZZER);
+	buzzer = on;
 }
+
+ /* Play buzzer for 1/2 duty cycle for specified time */
+void toggleBuzzer(uint8_t on)
+{
+	if( on ) {
+		PORTA |= _BV(BUZZER);
+	}
+	else {
+		PORTA &= ~_BV(BUZZER);
+	}
+}
+
+/* Timer 0 overflow function, should do the follow:
+    * reset the buzzer to on (if necessary) */
+ISR(TIM0_OVF_vect)
+{
+	toggleBuzzer(buzzer);
+}
+
+
+/* Timer 0 output compare A ISR
+ * and set the buzzer off
+ */
+ISR(TIM0_COMPA_vect)
+{
+	toggleBuzzer(OFF); 
+}
+
 
 /* ==========================
  * ===== IR Controls ========
