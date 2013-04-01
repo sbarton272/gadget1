@@ -26,14 +26,22 @@
 
 int main(void)
 {	
+	uint8_t ir_avrg, samples;
 	initSystem();
 
 	while(1) {	
-		
-		if ( irDetected() ) {
-			playBuzzer(10000);
+		setLED(OFF);
+
+		for (samples = 0; samples < MAX_SAMPLES; samples++ ){
+			ir_avrg = readIR() / MAX_SAMPLES;
 		}
-			
+
+		if ( ir_avrg > LONG_RANGE ) {
+			setLED(ON);
+			_delay_ms(100);
+			//playBuzzer(10000);
+		}
+
 		// Check if the button has been pressed, if so, nighty-night gadget!
 		if(sleep_status == ON )
 		{

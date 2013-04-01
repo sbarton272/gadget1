@@ -113,7 +113,7 @@ void goToSleep(void)
 {
 
 	// Delay for button debouncing
-	_delay_ms(100);
+	_delay_ms(1000);
 
 	// Set the sleep mode (could be done in the initSystem as well - only needs to be done once)
 	set_sleep_mode(SLEEP_MODE_PWR_DOWN);
@@ -134,7 +134,7 @@ void goToSleep(void)
     sleep_disable();
 
 	// Delay for a bit so that you don't accidentally go to sleep
-	_delay_ms(100);
+	_delay_ms(1000);
 
 	// Set LED pins back on
 	initLED();

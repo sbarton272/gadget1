@@ -17,7 +17,8 @@
 #define SHARPIR PA0
 
 // SHARP IR values
-#define LONG_RANGE 10;
+#define LONG_RANGE 3
+#define MAX_SAMPLES 10
 
 #define ON 1
 #define OFF 0
