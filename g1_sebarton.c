@@ -4,25 +4,7 @@
 	Spencer Barton
  */
 
-
-
 #include "g1.h"
-
-
-/*
-	TODO
-	X test IR
-	X test buzzer
-	X button inverted
-	X add README
-	- right buzzer duty cycle
-	- hardware pwm
-	- IR interupt
-	- sleep mode
-	X ADC for IR
-		X prescaler?
-
- */
 
 int main(void)
 {	
@@ -30,7 +12,6 @@ int main(void)
 	initSystem();
 
 	while(1) {	
-		//setLED(OFF);
 
 		samples = 0;
 		while ( (samples < MAX_SAMPLES) && !sleep_status) {
