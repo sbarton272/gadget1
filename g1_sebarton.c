@@ -23,9 +23,7 @@ int main(void)
 		}
 
 		if ( ir_avrg > LONG_RANGE ) {
-			setBuzzer(ON);
-			_delay_ms(BUZZ_TIME);
-			setBuzzer(OFF);
+			playBuzzer(FREQ, BUZZ_TIME);
 		}
 
 		// Check if the button has been pressed, if so, nighty-night gadget!

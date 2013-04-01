@@ -38,14 +38,16 @@ void initButton()
 void initBuzzer()
 {
 
-	DDRA |= _BV(BUZZER);
+	DDRA |= _BV(BUZZER); // buzzer output
 	
-	// Initialize timer 0 with a prescalar of 256, then turn on the output compare A and timer overflow interrupts
-	TCCR0B |= _BV(CS02); // 256 prescale
-	TIMSK0 |= _BV(OCIE0A) | _BV(TOIE0); // compare A, overflow
+	// Initialize timer 0 with a prescalar of 0 to turn off
+	TCCR0B = 0;
 
-	// duty cycle number
-	OCR0A = DUTY_CYCLE;
+	// Init with toggle and CTC mode
+	TCCR0A |= _BV(COM0A0) | _BV(WGM01);
+
+	// init freq as 0
+	OCR0A = 0;
 
 }
 
@@ -157,38 +159,20 @@ void goToSleep(void)
  * ===== Buzzer Controls ====
  * ========================== */
 
-void setBuzzer(uint8_t on)
+void playBuzzer(uint8_t freq, uint8_t duration)
 {
-	buzzer = on;
-}
+	// Set prescalar to 256
+	TCCR0B |= _BV(CS02);
 
- /* Play buzzer for 1/2 duty cycle for specified time */
-void toggleBuzzer(uint8_t on)
-{
-	if( on ) {
-		PORTA |= _BV(BUZZER);
+	// init freq as 0
+	for (uint8_t t = 1; t != 0; t++) {
+		OCR0A = t;
+		_delay_ms(100);
 	}
-	else {
-		PORTA &= ~_BV(BUZZER);
-	}
+
+	// Turn off the prescalar to turn off buzzer
+	TCCR0B &= ~_BV(CS02);
 }
-
-/* Timer 0 overflow function, should do the follow:
-    * reset the buzzer to on (if necessary) */
-ISR(TIM0_OVF_vect)
-{
-	toggleBuzzer(buzzer);
-}
-
-
-/* Timer 0 output compare A ISR
- * and set the buzzer off
- */
-ISR(TIM0_COMPA_vect)
-{
-	toggleBuzzer(OFF); 
-}
-
 
 /* ==========================
  * ===== IR Controls ========

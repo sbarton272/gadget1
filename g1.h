@@ -20,8 +20,10 @@
 #define LONG_RANGE 3
 #define MAX_SAMPLES 10
 #define SHIFT 3
+
+// Buzzer numbers
 #define BUZZ_TIME 1000
-#define DUTY_CYCLE 200
+#define FREQ 2000
 
 #define ON 1
 #define OFF 0
@@ -37,7 +39,7 @@ void initSystem(void);
 void setLED(uint8_t);
 int buttonPressed(void);
 void goToSleep(void);
-void playBuzzer(uint8_t);
+void playBuzzer(uint8_t, uint8_t);
 int irDetected(void);
 uint8_t readIR(void);
 
