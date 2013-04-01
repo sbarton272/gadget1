@@ -44,10 +44,10 @@ void initBuzzer()
 	TCCR0B = 0;
 
 	// Init with toggle and CTC mode
-	TCCR0A |= _BV(COM0A0) | _BV(WGM01);
+	TCCR0A = _BV(COM0B0) | _BV(WGM01);
 
 	// init freq as 0
-	OCR0A = 0;
+	OCR0A = FREQ;
 
 }
 
@@ -161,17 +161,21 @@ void goToSleep(void)
 
 void playBuzzer(uint8_t freq, uint8_t duration)
 {
-	// Set prescalar to 256
-	TCCR0B |= _BV(CS02);
+	// Set prescalar to 1024
+	TCCR0B |= _BV(CS02) | _BV(CS00);
+	
+	uint8_t dur = duration / 3;
 
-	// init freq as 0
-	for (uint8_t t = 1; t != 0; t++) {
-		OCR0A = t;
-		_delay_ms(100);
-	}
+	OCR0A = 3;
+	_delay_ms(dur);
+	OCR0A = 4;
+	_delay_ms(dur);
+	OCR0A = 5;
+	_delay_ms(dur);
 
 	// Turn off the prescalar to turn off buzzer
-	TCCR0B &= ~_BV(CS02);
+	TCCR0B &= ~_BV(CS02) & ~_BV(CS01) & ~_BV(CS00);
+	OCR0A = 0;
 }
 
 /* ==========================
