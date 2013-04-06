@@ -33,6 +33,7 @@ uint8_t sleep_status;
 void initLED(void);
 void initBuzzer(void);
 void initButton(void);
+void initSharpIR(void);
 void initADC(void);
 void initSystem(void);
 

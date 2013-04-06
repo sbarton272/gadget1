@@ -131,6 +131,7 @@ void goToSleep(void)
 
 	// Set outputs to inputs to reduce power consumption
 	DDRA &= ~_BV(LED); // LED
+	DDRA &= ~_BV(BUZZER); // buzzer as input
 
 	// Allow stuff to trigger sleep mode but don't go to sleep yet
 	sleep_enable();
@@ -149,6 +150,7 @@ void goToSleep(void)
 
 	// Set LED pins back on
 	initLED();
+	DDRA |= _BV(BUZZER); // buzzer output
 
 	// Make it so the button can send us back to sleep (set sleep_status to 0)
 	sleep_status = OFF;

@@ -8,7 +8,8 @@
 
 int main(void)
 {	
-	uint8_t ir_avrg, samples, read;
+	uint8_t ir_avrg = 0;
+	uint8_t samples, read;
 	initSystem();
 
 	while(1) {	
