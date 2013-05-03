@@ -18,7 +18,7 @@ void initSystem() {
 void initLED()
 {
 	// Set LED pin direction to output
-	DDRA |= _BV(LED);
+	DDRC |= _BV(LED);
 	
 	// Start LEDs ON to signal device is on
 	setLED(ON);
@@ -34,9 +34,9 @@ void initLED()
 void setLED(uint8_t led)
 {
 	if(led) {
-		PORTA |= _BV(LED);
+		PORTC |= _BV(LED);
 	}
 	else {
-		PORTA &= ~_BV(LED);
+		PORTC &= ~_BV(LED);
 	}
 }

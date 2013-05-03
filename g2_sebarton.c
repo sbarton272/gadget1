@@ -15,6 +15,9 @@ int main(void)
 
 		// light LED
 		setLED(ON);
+		_delay_ms(100);
+		setLED(OFF);
+		_delay_ms(100);
 
 	}
 		
