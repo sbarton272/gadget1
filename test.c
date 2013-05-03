@@ -16,10 +16,10 @@ void initLED()
 {
 	// Set LED pin direction to output
 	DDRA |= _BV(LED);
-	
+
 	// Start LEDs ON to signal device is on
 	setLED(ON);
-	
+
 }
 
 /*  In this function you should set the button pin to be an input */
@@ -39,7 +39,7 @@ void initBuzzer()
 {
 
 	DDRA |= _BV(BUZZER); // buzzer output
-	
+
 	// Initialize timer 0 with a prescalar of 0 to turn off
 	TCCR0B = 0;
 
@@ -56,7 +56,7 @@ void initSharpIR()
 {
 
 	DDRA &= ~_BV(SHARPIR);
-	
+
 }
 
 void initADC()
@@ -131,7 +131,6 @@ void goToSleep(void)
 
 	// Set outputs to inputs to reduce power consumption
 	DDRA &= ~_BV(LED); // LED
-	DDRA &= ~_BV(BUZZER); // buzzer as input
 
 	// Allow stuff to trigger sleep mode but don't go to sleep yet
 	sleep_enable();
@@ -141,7 +140,7 @@ void goToSleep(void)
 
 	// Send the sleep instruction
     sleep_cpu();
-		
+
 	// When we get here we've just woken up again, so disable the ability to sleep - brown-out detect automatically comes back
     sleep_disable();
 
@@ -150,7 +149,6 @@ void goToSleep(void)
 
 	// Set LED pins back on
 	initLED();
-	DDRA |= _BV(BUZZER); // buzzer output
 
 	// Make it so the button can send us back to sleep (set sleep_status to 0)
 	sleep_status = OFF;
@@ -165,7 +163,7 @@ void playBuzzer(uint8_t freq, uint8_t duration)
 {
 	// Set prescalar to 1024
 	TCCR0B |= _BV(CS02) | _BV(CS00);
-	
+
 	uint8_t dur = duration / 3;
 
 	OCR0A = 3;
@@ -198,7 +196,7 @@ uint8_t readIR()
     // start a conversion, 
 	// wait for the conversion to complete, 
 	// and then return the result
-	
+
 	ADMUX = (ADMUX & 0xC0) | SHARPIR; // keep the reference the same, use IR channel
 	ADCSRA |= _BV(ADSC); // start conversion
 
